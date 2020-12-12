@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\ImageTriks;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\ArticleTriks;
 
 /**
  * @method ImageTriks|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,17 @@ class ImageTriksRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getMinId(ArticleTriks $article) {
+        $query = $this->createQueryBuilder('i');
+        $query->select('MIN(i.id) AS min_id');
+        $query->where('i.Article = :article')->setParameter('article', $article);
+        return $query->getQuery()->getResult();
+    }
+
+    public function getImgById(Array $idImg){
+        return $this->findBy(
+            ['id' => $idImg["min_id"]]
+        );
+    }
 }

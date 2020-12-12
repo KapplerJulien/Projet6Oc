@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\ArticleTriks;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method ArticleTriks|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,12 @@ class ArticleTriksRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getPaginArticle(int $paginator_per_page) {
+        $query = $this->createQueryBuilder('a')
+            ->setMaxResults($paginator_per_page)
+            ->getQuery()
+        ;
+        return new Paginator($query);
+    }
 }
