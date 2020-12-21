@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\ImageTriks;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\ArticleTriks;
 
 /**
  * @method ImageTriks|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,10 @@ class ImageTriksRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getImgByArticle(ArticleTriks $article){
+        return $this->findBy(
+            ['Article' => $article]
+        );
+    }
 }

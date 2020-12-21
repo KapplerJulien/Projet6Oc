@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}TriksPédia!{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="{{ asset('build/app.css') }}" type="text/css" rel="stylesheet" />
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            {# Cover part #}
+            <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+                <header class="masthead mb-auto">
+                    <div class="inner">
+                    <h3 class="masthead-brand">TriksPédia</h3>
+                    <nav class="nav nav-masthead justify-content-center">
+                        <a class="nav-link active" href="{{ path('home') }}">Home</a>
+                        <a class="nav-link" href="#">Triks</a>
+                        {% if user is defined and user != null %}
+                            {# {{ dump(userId) }} #}
+                            <a class="nav-link" href="{{ path('article_triks_new') }}">New article</a>
+                            <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
+                        {% else %}
+                            <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
+                        {% endif %}
+                    </nav>
+                    </div>
+                </header>
+
+                <main role="main" class="inner cover text-center">
+                    <h1 class="cover-heading">Cover your page.</h1>
+                    <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+                </main>
+
+                <footer class="mastfoot mt-auto ">
+                    <div class="inner text-center">
+                    <p>Site créé avec <a href="https://getbootstrap.com/">Bootstrap</a> et <a href="https://symfony.com/">symfony 5</a>.</p>
+                    </div>
+                </footer>
+            </div>
+            {# End of cover part #}
+
+            {# Triks part #}
+            <section id="triks">
+                <div class="album py-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            {% set i = 1 %}
+                            {% for article in articles %}
+                                {#{{ dump(article.imageTriks) }} #}
+                                {# {{ dump(images) }} #}
+                                
+                                {# {{ dump(imageArt) }} #}
+                                <div class="col-md-4">
+                                    <div class="card mb-4 shadow-sm">
+                                        <svg height="0"><img src="{{ asset('/uploads/imagesArticle/' ~ imageArt[i][0].LienImgTriks) }}" width="100%" height="250px"/></svg>
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <a href="{{ path('article_triks_show', { 'id': article.id }) }}">{{ article.nomArtTriks }}</a>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary">Modifier</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary">Supprimer</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                                {% set i = i + 1 %} 
+                            {% endfor %}                 
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {# End of triks part #}
+
+            {# "Load more" part #}
+            {% if next < articles|length %}
+                <div class="container">
+                    <div class="d-flex justify-content-center">
+                        <a href="{{ path('home', { paginator_per_page: next }) }}">Load more</a>
+                    </div>  
+                </div>
+            {% endif %}
+            
+            {# End of "Load more" part #}
+        {% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
