@@ -49,16 +49,9 @@ class ImageTriksRepository extends ServiceEntityRepository
     }
     */
 
-    public function getMinId(ArticleTriks $article) {
-        $query = $this->createQueryBuilder('i');
-        $query->select('MIN(i.id) AS min_id');
-        $query->where('i.Article = :article')->setParameter('article', $article);
-        return $query->getQuery()->getResult();
-    }
-
-    public function getImgById(Array $idImg){
+    public function getImgByArticle(ArticleTriks $article){
         return $this->findBy(
-            ['id' => $idImg["min_id"]]
+            ['Article' => $article]
         );
     }
 }

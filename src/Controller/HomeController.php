@@ -9,10 +9,18 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\ArticleTriks;
 use App\Entity\ImageTriks;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class HomeController extends AbstractController 
 {
+    private $session;
+
+    public function __construct(SessionInterface $session)
+    {
+        $this->session = $session;
+    }
+
     /**
      * @Route("/home", name="home")
      */
@@ -20,7 +28,7 @@ class HomeController extends AbstractController
     {
         // Var
         $paginator_per_page = 5 + $request->query->getInt('paginator_per_page', 0);
-        $imagesTab = array();
+        $imagesArt = array();
         $i = 1;
         $repositoryArticles = $this->getDoctrine()->getRepository(ArticleTriks::class);
         $repositoryImage = $this->getDoctrine()->getRepository(ImageTriks::class);
@@ -30,20 +38,19 @@ class HomeController extends AbstractController
 
         // Collect image from the Database
         foreach($paginArticles as $article){
-            $idsImg = $repositoryImage->getMinId($article);
-            foreach($idsImg as $idImg){
-                $images = $repositoryImage->getImgById($idImg);
-                foreach($images as $image){
-                    $imagesTab[$i]['lien'] = $image->getLienImgTriks();
-                    $i ++;
-                }
-            }
+            // var_dump($article->getId());
+            $imageArt[$i] = $repositoryImage->getImgByArticle($article);
+            // var_dump($imageArt[$i][0]);
+            $i ++;
         }
+
+        $user = $this->session->get('user');
 
         return $this->render('home/home.html.twig', [
             "articles" => $paginArticles,
-            "images" => $imagesTab,
             "next" => min(count($paginArticles), $paginator_per_page),
+            "user" => $user,
+            "imageArt" => $imageArt,
         ]);
     }
 }

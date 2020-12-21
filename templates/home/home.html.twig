@@ -15,9 +15,15 @@
                     <div class="inner">
                     <h3 class="masthead-brand">TriksPédia</h3>
                     <nav class="nav nav-masthead justify-content-center">
-                        <a class="nav-link active" href="#">Home</a>
+                        <a class="nav-link active" href="{{ path('home') }}">Home</a>
                         <a class="nav-link" href="#">Triks</a>
-                        <a class="nav-link" href="#">Se connecter</a>
+                        {% if user is defined and user != null %}
+                            {# {{ dump(userId) }} #}
+                            <a class="nav-link" href="{{ path('article_triks_new') }}">New article</a>
+                            <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
+                        {% else %}
+                            <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
+                        {% endif %}
                     </nav>
                     </div>
                 </header>
@@ -42,14 +48,16 @@
                         <div class="row">
                             {% set i = 1 %}
                             {% for article in articles %}
-                                {# {{ dump(article.imageTriks) }} #}
+                                {#{{ dump(article.imageTriks) }} #}
                                 {# {{ dump(images) }} #}
+                                
+                                {# {{ dump(imageArt) }} #}
                                 <div class="col-md-4">
                                     <div class="card mb-4 shadow-sm">
-                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: {{ images[i]['lien'] }}"><title>{{ images[i]['lien'] }}</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">{{ images[i]['lien'] }}</text></svg>
+                                        <svg height="0"><img src="{{ asset('/uploads/imagesArticle/' ~ imageArt[i][0].LienImgTriks) }}" width="100%" height="250px"/></svg>
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center">
-                                                <a href="#lien">{{ article.nomArtTriks }}</a>
+                                                <a href="{{ path('article_triks_show', { 'id': article.id }) }}">{{ article.nomArtTriks }}</a>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-sm btn-outline-secondary">Modifier</button>
                                                     <button type="button" class="btn btn-sm btn-outline-secondary">Supprimer</button>
