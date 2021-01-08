@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Utilisateur;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Commentaire;
 
 /**
  * @method Utilisateur|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,4 +48,11 @@ class UtilisateurRepository extends ServiceEntityRepository
         ;
     }
     */
+    
+    public function connection(String $pseudo, String $password){
+        return $this->findBy([
+            'PseudoUtilisateur' => $pseudo,
+            'MdpUtilisateur' => $password,
+        ]);
+    }
 }
