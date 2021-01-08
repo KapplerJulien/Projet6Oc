@@ -47,4 +47,14 @@ class VideoTriksRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function addVideo(string $lienVideo, int $articleId){
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'INSERT INTO video_triks (article_id, lien_vid_triks) 
+        VALUES ('.$articleId.', "'.$lienVideo.'")';
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute();
+    }
 }

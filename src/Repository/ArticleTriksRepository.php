@@ -56,4 +56,21 @@ class ArticleTriksRepository extends ServiceEntityRepository
         ;
         return new Paginator($query);
     }
+
+    public function addArticle(ArticleTriks $article, int $userId, int $groupId){
+        $conn = $this->getEntityManager()->getConnection();
+        $date = date("Y-m-d");
+        $sql = 'INSERT INTO article_triks (nom_art_triks, contenu_art_triks, date_creation_art_triks, date_derniere_modification_art_triks, utilisateur_id, groupe_id) 
+        VALUES ("'.$article->getNomArtTriks().'", "'.$article->getContenuArtTriks().'", "'.$date.'", "'.$date.'",'.$userId.','.$groupId.')';
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute();
+    }
+
+    public function getMaxId(){
+        $query = $this->createQueryBuilder('a');
+        $query->select('MAX(a.id) AS max_id');
+        return $query->getQuery()->getResult();
+    }
+
 }
