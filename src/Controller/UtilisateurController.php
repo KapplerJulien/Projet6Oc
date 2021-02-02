@@ -45,7 +45,8 @@ class UtilisateurController extends AbstractController
                     // $id = $utilisateurBDD->getId();
                     // var_dump($pseudo);
                     // var_dump($id);
-                    $this->session->set('user',$utilisateurBDD);
+                    $id = $utilisateurBDD[0];
+                    $this->session->set('userId',$id);
 
                     return $this->redirectToRoute('home');
                 }

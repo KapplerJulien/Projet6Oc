@@ -22,7 +22,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/home", name="home")
+     * @Route("/homeP6", name="home")
      */
     public function home(Request $request): Response
     {
@@ -44,7 +44,7 @@ class HomeController extends AbstractController
             $i ++;
         }
 
-        $user = $this->session->get('user');
+        $user = $this->session->get('userId');
 
         return $this->render('home/home.html.twig', [
             "articles" => $paginArticles,
