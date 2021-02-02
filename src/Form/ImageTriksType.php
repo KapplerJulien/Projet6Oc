@@ -12,7 +12,12 @@ class ImageTriksType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('LienImgTriks')
+           ->add('imageTriks', CollectionType::class, [
+                'entry_type' => ImageTriksType::class,
+                'allow_add' => true,
+                'label' => false,
+                'mapped' => false,
+            ])
             ->add('Article')
         ;
     }
