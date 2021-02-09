@@ -1,0 +1,63 @@
+{{ form_start(form) }}  
+        {{ form_row(form.NomArtTriks) }}
+
+        <div class="d-flex">
+            <div class="block-img-add">
+                <ul id="image-fields-list"
+                    data-prototype="{{ form_widget(form.LienImgTriks.vars.prototype)|e }}"
+                    data-widget-tags="{{ '<li></li>'|e }}"
+                    data-widget-counter="{{ form.LienImgTriks|length }}">
+                    {% for imageField in form.LienImgTriks %}
+                        <li>
+                            {{ form_errors(imageField) }}
+                            {{ form_widget(imageField) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="add-another-collection-widget btn-new-image" data-list-selector="#image-fields-list">Ajout image</button>
+            </div>    
+
+            <div class="block-vid-add">
+                <ul id="video-fields-list"
+                    data-prototype="{{ form_widget(form.videoTriks.vars.prototype)|e }}"
+                    data-widget-tags="{{ '<li></li>'|e }}"
+                    data-widget-counter="{{ form.videoTriks|length }}">
+                    {% for videoField in form.videoTriks %}
+                        <li>
+                            {{ form_errors(videoField) }}
+                            {{ form_widget(videoField) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="add-another-collection-widget btn-new-video" data-list-selector="#video-fields-list">Ajout vidéo</button>
+            </div>
+        </div>
+        
+        {{ form_row(form.ContenuArtTriks) }}
+
+        {{ form_row(form.Groupe) }}
+
+    {# Vérifier si la route est "annonces_edit" on affiche les images #}
+    
+        {# {{ dump(imagesArticle) }} #}
+        {# {% for image in imagesArticle %}
+            <div> 
+                <img src="{{ asset('/uploads/imagesArticle/' ~ image.LienImgTriks) }}" alt="Image"  width="150">
+                
+            </div>
+        {% endfor %} 
+        {% for video in videosArticle %}
+            <div> 
+                <input type="text" class="nom-article-new" value="{{ video.LienVidTriks }}" />
+            </div>
+        {% endfor %}  #}
+        
+        {{ form_row(form.AjouterArticle, { 'label': 'Ajouter article' }) }}
+{{ form_end(form) }} 
+    
+{% block javascripts %}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="{{ asset('js/addNewField.js') }}"></script>
+    <script src="{{ asset('js/removeField.js') }}"></script>
+{% endblock %}
+

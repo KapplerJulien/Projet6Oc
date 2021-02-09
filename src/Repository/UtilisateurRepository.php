@@ -55,4 +55,10 @@ class UtilisateurRepository extends ServiceEntityRepository
             'MdpUtilisateur' => $password,
         ]);
     }
+
+    public function getUserById(Int $idUser){
+        return $this->findOneBy([
+            'id' => $idUser
+        ]);
+    }
 }

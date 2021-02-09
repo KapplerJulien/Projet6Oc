@@ -54,4 +54,14 @@ class ImageTriksRepository extends ServiceEntityRepository
             ['Article' => $article]
         );
     }
+
+    public function addImage(string $lienImg, int $articleId){
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'INSERT INTO image_triks (article_id, lien_img_triks) 
+        VALUES ('.$articleId.', "'.$lienImg.'")';
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute();
+    }
 }

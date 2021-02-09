@@ -1,0 +1,50 @@
+{# {% extends 'base.html.twig' %} #}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}TriksPédia!{% endblock %}</title>
+        {% block stylesheets %}
+            <link href="{{ asset('build/app.css') }}" type="text/css" rel="stylesheet" />
+        {% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            {# Cover part #}
+            <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
+                <header class="masthead mb-auto">
+                    <div class="inner">
+                        <h3 class="masthead-brand">TriksPédia</h3>
+                        <nav class="nav nav-masthead justify-content-center">
+                            <a class="nav-link active" href="{{ path('home') }}">Home</a>
+                            <a class="nav-link" href="#">Triks</a>
+                            {% if user is defined and user != null %}
+                                {# {{ dump(userId) }} #}
+                                <a class="nav-link" href="{{ path('article_triks_new') }}">New article</a>
+                                <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
+                            {% else %}
+                                <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
+                            {% endif %}
+                        </nav>
+                    </div>
+                </header>
+        
+                <main role="main" class="inner cover text-center">
+                    <h1>Create new ArticleTriks</h1>
+
+                    {{ include('article_triks/_form.html.twig') }}
+                    
+                </main>
+
+                <footer class="mastfoot mt-auto ">
+                    <div class="inner text-center">
+                    <p>Site créé avec <a href="https://getbootstrap.com/">Bootstrap</a> et <a href="https://symfony.com/">symfony 5</a>.</p>
+                    </div>
+                </footer>
+
+            </div>
+    {% endblock %}
+    {% block javascripts %}
+    {% endblock %}
+    </body>
+</html>

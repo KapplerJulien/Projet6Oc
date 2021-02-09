@@ -47,4 +47,8 @@ class GroupeTriksRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getAllGroup(){
+        return $this->findAll();
+    }
 }
