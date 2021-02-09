@@ -17,6 +17,7 @@ use App\Entity\GroupeTriks;
 use App\Entity\Utilisateur;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Service\FileUploader;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/article/triks")
@@ -32,6 +33,8 @@ class ArticleTriksController extends AbstractController
 
     /**
      * @Route("article/new", name="article_triks_new", methods={"GET","POST"})
+     * 
+     * @IsGranted("ROLE_USER")
      */
     public function new(Request $request, FileUploader $fileUploader): Response
     {
@@ -62,7 +65,10 @@ class ArticleTriksController extends AbstractController
 
             // var_dump($imagesTriks);
                 
-            $user = $repositoryUser->getUserById($userIdSession->getId());
+            // $articleTrik->setUtilisateur($user);
+            // $user = $repositoryUser->getUserById($userIdSession);
+            /** @var \App\Entity\Utilisateur $user */
+            $user = $this->getUser();
             $articleTrik->setUtilisateur($user);
             $articleTrik->setGroupe($groupeTriks);
 

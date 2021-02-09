@@ -11,26 +11,28 @@
     <body>
         {% block body %}
             {# Cover part #}
-            <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column ">
-                <header class="masthead mb-auto">
-                    <div class="inner">
-                        <h3 class="masthead-brand">TriksPédia</h3>
-                        <nav class="nav nav-masthead justify-content-center">
-                            <a class="nav-link active" href="{{ path('home') }}">Home</a>
-                            <a class="nav-link" href="#">Triks</a>
-                            {% if user is defined and user != null %}
-                                {# {{ dump(userId) }} #}
-                                <a class="nav-link" href="{{ path('article_triks_new') }}">New article</a>
-                                <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
-                            {% else %}
-                                <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
-                            {% endif %}
-                        </nav>
-                    </div>
-                </header>
+           <div class="cover-container-show d-flex w-100 h-100 p-3 mx-auto flex-column">
+                <div class="d-flex justify-content-center mb-auto">
+                    <header class="masthead mb-auto cover-container-show-header">
+                        <div class="inner">
+                            <h3 class="masthead-brand">TriksPédia</h3>
+                            <nav class="nav nav-masthead justify-content-center">
+                                <a class="nav-link active" href="{{ path('home') }}">Home</a>
+                                <a class="nav-link" href="#">Triks</a>
+                                {% if user is defined and user != null %}
+                                    {# {{ dump(userId) }} #}
+                                    <a class="nav-link" href="{{ path('article_triks_new') }}">New article</a>
+                                    <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
+                                {% else %}
+                                    <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
+                                {% endif %}
+                            </nav>
+                        </div>
+                    </header>
+                </div>
         
-                <main role="main" class="inner cover text-center">
-                    <h1>Create new ArticleTriks</h1>
+                <main role="main" class="inner cover text-center">                
+                    <h1 class="titre-new">Nouvel article</h1>
 
                     {{ include('article_triks/_form.html.twig') }}
                     
