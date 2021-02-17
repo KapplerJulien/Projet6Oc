@@ -22,7 +22,7 @@ class HomeController extends AbstractController
     }
 
     /**
-     * @Route("/homeP6", name="home")
+     * @Route("/home", name="home")
      */
     public function home(Request $request): Response
     {

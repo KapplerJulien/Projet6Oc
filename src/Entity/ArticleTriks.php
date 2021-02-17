@@ -25,7 +25,7 @@ class ArticleTriks
     private $NomArtTriks;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=5000)
      */
     private $ContenuArtTriks;
 
@@ -40,13 +40,13 @@ class ArticleTriks
     private $DateDerniereModificationArtTriks;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="articleTriks")
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="articleTriks", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $Utilisateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=GroupeTriks::class, inversedBy="articleTriks")
+     * @ORM\ManyToOne(targetEntity=GroupeTriks::class, inversedBy="articleTriks", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $Groupe;
@@ -238,5 +238,10 @@ class ArticleTriks
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->NomArtTriks;
     }
 }
