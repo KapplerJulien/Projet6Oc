@@ -130,4 +130,44 @@ class ArticleTriksController extends AbstractController
             'user' => $userIdSession,
         ]);
     }
+
+    /**
+     * @Route("article/{id}", name="article_triks_show", methods={"GET", "POST"}, requirements={"id":"\d+"})
+     */
+    public function show(ArticleTriks $articleTrik, Request $request): Response
+    {
+        // Var
+        $repositoryVideos = $this->getDoctrine()->getRepository(VideoTriks::class);
+        $repositoryImage = $this->getDoctrine()->getRepository(ImageTriks::class);
+        $repositoryComment = $this->getDoctrine()->getRepository(Commentaire::class);
+        $repositoryGroup = $this->getDoctrine()->getRepository(GroupeTriks::class);
+        $repositoryUser = $this->getDoctrine()->getRepository(Utilisateur::class);
+
+        $paginator_per_page = 2 + $request->query->getInt('paginator_per_page', 0);
+
+        $commentsUser = array();
+        $i = 1;
+
+        // Collect images by article
+        $images = $articleTrik->getImageTriks();
+
+        // Collect videos by article
+        $videos = $articleTrik->getVideoTriks();
+
+        // Collect group by article
+        $group = $articleTrik->getGroupe();
+
+        // Collect comments by article
+        // $comments = $repositoryComment->getCommentsByArticle($articleTrik);
+        $comments = $repositoryComment->getPaginComment($paginator_per_page, $articleTrik);
+
+        return $this->render('article_triks/show.html.twig', [
+            'article_trik' => $articleTrik,
+            'videos_triks' => $videos,
+            'images_triks' => $images,
+            'group_triks' => $group,
+            'comments_triks' => $comments,
+            "next" => min(count($comments), $paginator_per_page),
+        ]);
+    }
 }
