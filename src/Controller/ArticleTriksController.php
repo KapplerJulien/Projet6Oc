@@ -136,13 +136,6 @@ class ArticleTriksController extends AbstractController
      */
     public function show(ArticleTriks $articleTrik, Request $request): Response
     {
-        // Var
-        $repositoryVideos = $this->getDoctrine()->getRepository(VideoTriks::class);
-        $repositoryImage = $this->getDoctrine()->getRepository(ImageTriks::class);
-        $repositoryComment = $this->getDoctrine()->getRepository(Commentaire::class);
-        $repositoryGroup = $this->getDoctrine()->getRepository(GroupeTriks::class);
-        $repositoryUser = $this->getDoctrine()->getRepository(Utilisateur::class);
-
         $paginator_per_page = 2 + $request->query->getInt('paginator_per_page', 0);
 
         $commentsUser = array();
