@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ArticleTriks;
 use App\Form\ArticleTriksType;
+use App\Form\CommentType;
 use App\Repository\ArticleTriksRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -137,28 +138,48 @@ class ArticleTriksController extends AbstractController
     public function show(ArticleTriks $articleTrik, Request $request): Response
     {
         $paginator_per_page = 2 + $request->query->getInt('paginator_per_page', 0);
-
+        $repositoryComment = $this->getDoctrine()->getRepository(Commentaire::class);
         $commentsUser = array();
         $i = 1;
-
-        // Collect images by article
-        $images = $articleTrik->getImageTriks();
-
-        // Collect videos by article
-        $videos = $articleTrik->getVideoTriks();
-
-        // Collect group by article
-        $group = $articleTrik->getGroupe();
 
         // Collect comments by article
         // $comments = $repositoryComment->getCommentsByArticle($articleTrik);
         $comments = $repositoryComment->getPaginComment($paginator_per_page, $articleTrik);
 
+        /** @var \App\Entity\Utilisateur $user */
+        $user = $this->getUser();
+          
+        if($user != NULL && !empty($user)){
+            $newComment = new Commentaire();
+
+            $form = $this->createForm(CommentType::class, $newComment);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                // $repositoryComment->addComment($newComment, $user[0]->getId(), $articleTrik->getId());
+                $newComment->setArticle($articleTrik);
+                $newComment->setUtilisateur($user);
+
+                $date = new \DateTime("now");
+                $newComment->setDateCommentaire($date);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($newComment);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('article_triks_show', [ 'id' => $articleTrik->getId() ]);
+            }
+            return $this->render('article_triks/show.html.twig', [
+                'article_trik' => $articleTrik,
+                'comments_triks' => $comments,
+                'user' => $user,
+                'form' => $form->createView(),
+                "next" => min(count($comments), $paginator_per_page),
+            ]);
+        }
+
         return $this->render('article_triks/show.html.twig', [
             'article_trik' => $articleTrik,
-            'videos_triks' => $videos,
-            'images_triks' => $images,
-            'group_triks' => $group,
             'comments_triks' => $comments,
             "next" => min(count($comments), $paginator_per_page),
         ]);

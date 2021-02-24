@@ -50,7 +50,7 @@
                                                 </a> #}
                                             </div>
                                         </div>
-                                        <img class="img-thumbnail-article" src="{{ asset('/uploads/imagesArticle/' ~ images_triks[0].LienImgTriks) }}" alt="Image de tricks de snowboard">                                         
+                                        <img class="img-thumbnail-article" src="{{ asset('/uploads/imagesArticle/' ~ article_trik.imageTriks[0].LienImgTriks) }}" alt="Image de tricks de snowboard">                                         
                                     </div>
                                     <figcaption class="figcaption-articleName">{{ article_trik.NomArtTriks }}</figcaption>
                                 </figure>
@@ -64,7 +64,7 @@
                                     <button class="btn-user" id="display-hide-see-article-show">Afficher / cacher images et vidéos</button>
                                 </div>
                                 <div class="row justify-content-center hide-display display-image-vid-show" id="display-images-videos-article-show">
-                                {% for imageTriks in images_triks %}
+                                {% for imageTriks in article_trik.imageTriks %}
                                     {% if not loop.first %}
                                         <div class="col-md-3" >
                                             <div class="card mb-3 shadow-sm">
@@ -73,7 +73,7 @@
                                         </div>   
                                     {% endif %}
                                 {% endfor %}
-                                {% for videoTriks in videos_triks %}
+                                {% for videoTriks in article_trik.videoTriks %}
                                     <div class="col-md-3">
                                         <iframe src="{{ videoTriks.LienVidTriks }}">
                                         </iframe> 
@@ -91,7 +91,7 @@
                             </div>
                             <div class="d-flex justify-content-center group-article-show"> 
                                 <div class="group-border">Crée le : {{ article_trik.DateCreationArtTriks ? article_trik.DateCreationArtTriks|date('Y-m-d') : '' }}</div>
-                                <div class="group-border">Groupe : {{ group_triks.NomGrpTriks }}</div>
+                                <div class="group-border">Groupe : {{ article_trik.groupe.NomGrpTriks }}</div>
                                 <div class="group-border">Dernière modification le : {{ article_trik.DateDerniereModificationArtTriks ? article_trik.DateDerniereModificationArtTriks|date('Y-m-d') : '' }}</div>
                             </div>
                         {% if user is defined and user != null %}
