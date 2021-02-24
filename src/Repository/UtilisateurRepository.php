@@ -48,17 +48,18 @@ class UtilisateurRepository extends ServiceEntityRepository
         ;
     }
     */
-    
-    public function connection(String $pseudo, String $password){
+
+    public function getUserByEmail(String $emailUser){
         return $this->findBy([
-            'PseudoUtilisateur' => $pseudo,
-            'MdpUtilisateur' => $password,
+            'MailUtilisateur' => $emailUser
         ]);
     }
 
-    public function getUserById(Int $idUser){
-        return $this->findOneBy([
-            'id' => $idUser
-        ]);
+    public function setPasswordUser(Int $idUser, String $passwordUser){
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'Update Utilisateur set password = "'.$passwordUser.'" where id='.$idUser.';';
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute();
     }
 }
