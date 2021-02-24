@@ -142,15 +142,6 @@ class ArticleTriksController extends AbstractController
         $commentsUser = array();
         $i = 1;
 
-        // Collect images by article
-        $images = $articleTrik->getImageTriks();
-
-        // Collect videos by article
-        $videos = $articleTrik->getVideoTriks();
-
-        // Collect group by article
-        $group = $articleTrik->getGroupe();
-
         // Collect comments by article
         // $comments = $repositoryComment->getCommentsByArticle($articleTrik);
         $comments = $repositoryComment->getPaginComment($paginator_per_page, $articleTrik);
@@ -180,9 +171,6 @@ class ArticleTriksController extends AbstractController
             }
             return $this->render('article_triks/show.html.twig', [
                 'article_trik' => $articleTrik,
-                'videos_triks' => $videos,
-                'images_triks' => $images,
-                'group_triks' => $group,
                 'comments_triks' => $comments,
                 'user' => $user,
                 'form' => $form->createView(),
@@ -192,9 +180,6 @@ class ArticleTriksController extends AbstractController
 
         return $this->render('article_triks/show.html.twig', [
             'article_trik' => $articleTrik,
-            'videos_triks' => $videos,
-            'images_triks' => $images,
-            'group_triks' => $group,
             'comments_triks' => $comments,
             "next" => min(count($comments), $paginator_per_page),
         ]);
