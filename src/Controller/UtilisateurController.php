@@ -9,60 +9,85 @@ use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
+use App\Form\EmailPasswordType;
+use App\Form\EditPasswordType;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UtilisateurController extends AbstractController 
 {
-    private $session;
+    private $encoder;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(UserPasswordEncoderInterface $encoder)
     {
-        $this->session = $session;
+        $this->encoder = $encoder;
     }
 
     /**
-     * @Route("user/connect", name="login")
+     * @Route("user/emailEditPassword" , name="email_edit_password")
      */
-    public function connect(Request $request): Response
+    public function emailEditPassword(Request $request, MailerInterface $mailer): Response
     {
-        // Nous créons l'instance de "Utilisateur"
-        $utilisateur = new Utilisateur();
-
-        // Nous créons le formulaire en utilisant "ConnectionType" et on lui passe l'instance
-        $form = $this->createForm(UtilisateurType::class, $utilisateur);
-
-        // Nous récupérons les données
+        $user = new Utilisateur();
+        $form = $this->createForm(EmailPasswordType::class, $user);
         $form->handleRequest($request);
 
-        // Nous vérifions si le formulaire a été soumis et si les données sont valides
         if ($form->isSubmitted() && $form->isValid()) {
-                $userRepository = $this->getDoctrine()->getRepository(Utilisateur::class);
+            $userRepository = $this->getDoctrine()->getRepository(Utilisateur::class);
+            $userEditPass = $userRepository->getUserByEmail($user->getMailUtilisateur());
 
-                $utilisateurBDD = $userRepository->connection($utilisateur->getPseudoUtilisateur() ,$utilisateur->getMdpUtilisateur());
+            $encodedId = urlencode(base64_encode($userEditPass[0]->getId()));
 
+            $email = (new Email())
+            ->from('test@gmail.com ')
+            ->to($userEditPass[0]->getMailUtilisateur())
+            ->subject('Reset mot de passe')
+            ->text('Bonjour '.$userEditPass[0]->getUsername().', Veuillez suivre ce lien pour changer votre motDePasse : http://localhost:8000/editPassword/'.$encodedId.'')
+            ->html('<p>Bonjour '.$userEditPass[0]->getUsername().', </br>Veuillez suivre ce lien pour changer votre motDePasse : http://localhost:8000/editPassword/'.$encodedId.'</p>');
 
-                if(!empty($utilisateurBDD)){
-                    // $id = $utilisateurBDD->getId();
-                    // var_dump($pseudo);
-                    // var_dump($id);
-                    $id = $utilisateurBDD[0];
-                    $this->session->set('userId',$id);
+            $mailer->send($email);
 
-                    return $this->redirectToRoute('home');
-                }
-
+            return $this->redirectToRoute('home');
         }
 
-        return $this->render('user/connect.html.twig', [
+        return $this->render('user/emailEditPassword.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("user/logout", name="logout")
+     * @Route("/editPassword/{id}" , name="edit_password")
      */
-    public function logout(){
-        $this->session->clear();
-        return $this->redirectToRoute('home');
+    public function editPassword(Request $request): Response
+    {
+        $user = new Utilisateur();
+        $form = $this->createForm(EditPasswordType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userRepository = $this->getDoctrine()->getRepository(Utilisateur::class);
+            $verifPassword = $request->request->get('verifPassword');
+
+            if($verifPassword != $user->getPassword()){
+                $errorMessage = "Vos deux mot de passe ne correspondent pas.";
+
+                return $this->render('user/editPassword.html.twig', [
+                    'form' => $form->createView(),
+                    'errorMessage' => $errorMessage,
+                ]);
+            }
+            $idUser = $request->attributes->get('id');
+            $encodedPassword = $this->encoder->encodePassword($user, $user->getPassword());
+            $decodedIdUser = (int) base64_decode(urldecode($idUser));
+            $userRepository->setPasswordUser($decodedIdUser, $encodedPassword);
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('user/editPassword.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }
