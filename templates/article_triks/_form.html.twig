@@ -1,7 +1,160 @@
 {{ form_start(form) }}  
-        {{ form_row(form.NomArtTriks) }}
+    {% if app.request.attributes.get('_route') == 'article_triks_edit' %}
+        <div class="bg-light">
+            <div class="d-flex justify-content-center">
+                <div class="block-img">
+                <figure>
+                    <div class="index-img">
+                        <img class="img-thumbnail-article" src="{{ asset('/uploads/imagesArticle/' ~ article_trik.imageTriks[0].LienImgTriks) }}" alt="" />
+                        <div class="d-flex justify-content-between align-items-center">
+                            <input type="file" name="image_{{ article_trik.imageTriks[0].id }}" id="{{ article_trik.imageTriks[0].id }}" class="hide-input"/>
+                            <div class="btn-group d-flex">
+                                <div class="edit-btn">
+                                    <a onclick="hideSeeEditImgVid(document.getElementById('{{ article_trik.imageTriks[0].id }}'))">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                                {% if article_trik.imageTriks[0].LienImgTriks != 'NoPicture.jpg' %}
+                                    <div class="edit-btn">
+                                        <a href="{{ path('article_triks_delete_image', {id: article_trik.imageTriks[0].id}) }}" data-delete data-token="{{ csrf_token('delete' ~ article_trik.imageTriks[0].id) }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </figure>
 
-        <div class="d-flex">
+                    
+                    
+                    
+                    {# <button type="button" class="edit-image btn-new-image">Modifier image</button> #}
+                    {# <img class="img-thumbnail" src="/img/bg-masthead.jpg"> {{ article_trik.NomArtTriks }} </img> #}
+                    <div class="name-new-article">
+                        {{ form_row(form.NomArtTriks) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="album py-4 ">
+                <div class="container">
+                    <div class="see-display">
+                        <button type="button" class="btn-user" id="display-hide-see-article-show">Afficher / cacher images et vidéos</button>
+                    </div>
+                    <div class="row justify-content-center hide-display" id="display-images-videos-article-show">
+                    {% for imageTriks in article_trik.imageTriks %}
+                        {% if not loop.first %}
+                        <div class="col-md-3">
+                            <div class="card mb-3 shadow-sm">
+                                <img class="img-article" src="{{ asset('/uploads/imagesArticle/' ~ imageTriks.LienImgTriks) }}" />
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <input type="file" name="image_{{ imageTriks.id }}" id="{{ imageTriks.id }}" class="hide-input"/>
+                                    <div class="btn-group d-flex">
+                                        <div class="edit-btn">
+                                            <a onclick="hideSeeEditImgVid(document.getElementById('{{ imageTriks.id }}'))">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="edit-btn">
+                                            <a href="{{ path('article_triks_delete_image', {id: imageTriks.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ imageTriks.id) }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                        {% endif %}
+                    {% endfor %}
+                    {% for videoTriks in article_trik.videoTriks %}
+                        <div class="col-md-3">
+                            <div class="card mb-3 shadow-sm">
+                                <iframe src="{{ videoTriks.LienVidTriks }}">
+                                </iframe> 
+                                <div class="d-flex justify-content-between align-items-center edit-delete-video-div">
+                                    <input type="text" name="video_{{ videoTriks.id }}" id="{{ videoTriks.id }}"/>
+                                    <div class="btn-group d-flex">
+                                        <div class="edit-btn">
+                                            <a onclick="hideSeeEditImgVid(document.getElementById('{{ videoTriks.id }}'))">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                        <div class="edit-btn">
+                                            <a href="{{ path('article_triks_delete_video', {id: videoTriks.id}) }}" data-delete data-token="{{ csrf_token('delete' ~ videoTriks.id) }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex block-img-vid-add">
+            <div class="block-img-add">
+                <ul id="image-fields-list"
+                    data-prototype="{{ form_widget(form.LienImgTriks.vars.prototype)|e }}"
+                    data-widget-tags="{{ '<li></li>'|e }}"
+                    data-widget-counter="{{ form.LienImgTriks|length }}">
+                    {% for imageField in form.LienImgTriks %}
+                        <li>
+                            {{ form_errors(imageField) }}
+                            {{ form_widget(imageField) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="add-another-collection-widget btn-new-image" data-list-selector="#image-fields-list">Ajout image</button>
+            </div>    
+
+            <div class="block-vid-add">
+                <ul id="video-fields-list"
+                    data-prototype="{{ form_widget(form.videoTriks.vars.prototype)|e }}"
+                    data-widget-tags="{{ '<li></li>'|e }}"
+                    data-widget-counter="{{ form.videoTriks|length }}">
+                    {% for videoField in form.videoTriks %}
+                        <li>
+                            {{ form_errors(videoField) }}
+                            {{ form_widget(videoField) }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="add-another-collection-widget btn-new-video" data-list-selector="#video-fields-list">Ajout vidéo</button>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center text-wrap">
+            <div class="block-text">
+                {{ form_row(form.ContenuArtTriks) }}
+                {{ form_row(form.Groupe) }}
+            </div>
+        </div>
+                        
+    {% else %}
+        <div class="name-new-article">
+            {{ form_row(form.NomArtTriks) }}
+        </div>
+
+        <div class="d-flex block-img-vid-add">
             <div class="block-img-add">
                 <ul id="image-fields-list"
                     data-prototype="{{ form_widget(form.LienImgTriks.vars.prototype)|e }}"
@@ -37,6 +190,8 @@
 
         {{ form_row(form.Groupe) }}
 
+    {% endif %}
+
     {# Vérifier si la route est "annonces_edit" on affiche les images #}
     
         {# {{ dump(imagesArticle) }} #}
@@ -52,12 +207,18 @@
             </div>
         {% endfor %}  #}
         
+
+    {% if app.request.attributes.get('_route') == 'article_triks_edit' %}
+        {{ form_row(form.AjouterArticle, { 'label': 'Modifier article' }) }} 
+    {% else %}
         {{ form_row(form.AjouterArticle, { 'label': 'Ajouter article' }) }}
+    {% endif %}
+
 {{ form_end(form) }} 
-    
 {% block javascripts %}
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="{{ asset('js/addNewField.js') }}"></script>
     <script src="{{ asset('js/removeField.js') }}"></script>
+    <script src="{{ asset('js/changeDisplayField.js') }}"></script>
 {% endblock %}
 
