@@ -22,9 +22,9 @@
                                 {% if user is defined and user != null %}
                                     {# {{ dump(userId) }} #}
                                     <a class="nav-link" href="{{ path('article_triks_new') }}">New article</a>
-                                    <a class="nav-link" href="{{ path('logout') }}">Se déconnecter</a>
+                                    <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
                                 {% else %}
-                                    <a class="nav-link" href="{{ path('login') }}">Se connecter</a>
+                                    <a class="nav-link" href="{{ path('app_login') }}">Se connecter</a>
                                 {% endif %}
                             </nav>
                         </div>

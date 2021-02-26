@@ -335,4 +335,41 @@ class ArticleTriksController extends AbstractController
             return new JsonResponse(['error' => 'Token Invalide'], 400);
         }
     }
+
+    /**
+     * @Route("/{id}", name="article_triks_delete", methods={"DELETE"})
+     * 
+     * @IsGranted("ROLE_USER")
+     */
+    public function delete(Request $request, ArticleTriks $articleTrik): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$articleTrik->getId(), $request->request->get('_token'))) {
+            // delete img and video
+            $repositoryImage = $this->getDoctrine()->getRepository(ImageTriks::class);
+            $repositoryVideo = $this->getDoctrine()->getRepository(VideoTriks::class);
+            $repositoryComment = $this->getDoctrine()->getRepository(Commentaire::class);
+
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $images = $articleTrik->getImageTriks();
+            // $images = $repositoryImage->removeImageByArticle($articleTrik);
+            foreach($images as $image){
+                if($image->getLienImgTriks() != 'NoPicture.jpg'){
+                    $nom = $image->getLienImgTriks();
+                    unlink($this->getParameter('images_directory').'/'.$nom);
+                }
+            }
+
+            $comments = $articleTrik->getCommentaires();
+            foreach($comments as $comment){
+                $entityManager->remove($comment);
+                $entityManager->flush();
+            }
+
+            $entityManager->remove($articleTrik);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('home');
+    }
 }
