@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\GroupeTriks;
@@ -18,8 +19,20 @@ class ArticleTriksType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('NomArtTriks')
-            ->add('ContenuArtTriks')
+            ->add('NomArtTriks', TextType::class, [
+                'attr' => [
+                    'class' => 'fadeIn second',
+                    'placeholder' => 'Nom'
+                ],
+                'label' => false
+            ])
+            ->add('ContenuArtTriks', TextareaType::class, [
+                'attr' => [
+                    'class' => 'fadeIn second contenu-article-new',
+                    'placeholder' => 'Contenu',
+                ],
+                'label' => false 
+            ])
             ->add('LienImgTriks', CollectionType::class, [
                 'entry_type' => FileType::class,
                 'allow_add' => 'true',
