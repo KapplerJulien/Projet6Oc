@@ -38,7 +38,7 @@
                     <div class="wrapper fadeInDown">
                         <div id="formContent">
                             {% if error %}
-                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                                <div class="warning-text">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                             {% endif %}
                             {% if app.user %}
                                 <div class="mb-3">
