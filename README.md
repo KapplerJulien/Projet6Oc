@@ -72,6 +72,7 @@ If you have some problem with the website. I will write here every library I use
 ### Database 
 
 [Doctrine](https://symfony.com/doc/current/doctrine.html#installing-doctrine)
+
 [DataFixtures](https://symfony.com/doc/current/bundles/DoctrineFixturesBundle/index.html)
 
 ### Routing
@@ -85,7 +86,9 @@ If you have some problem with the website. I will write here every library I use
 ### CSS
 
 [Encore](https://symfony.com/doc/current/frontend/encore/installation.html)
+
 [Best practice](https://symfony.com/doc/current/best_practices.html#web-assets)
+
 [Bootstrap](https://symfony.com/doc/current/frontend/encore/bootstrap.html)
 
 ### Security
