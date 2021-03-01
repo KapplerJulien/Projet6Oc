@@ -20,7 +20,7 @@ If you want to use this project, you can download it. You have a button at the t
 
 You have to be carefull if you want to install this project because : 
 
-- I used WAMPServer for the local development, you can find it here : [WampServer](https://www.wampserver.com/). If you have some problems with WampServer, don't worry, there are a lot of tutorials on internet. You will find everything you need. Or you can also use the documentation.
+- I used WAMPServer for the database, you can find it here : [WampServer](https://www.wampserver.com/). If you have some problems with WampServer, don't worry, there are a lot of tutorials on internet. You will find everything you need. Or you can also use the documentation.
 
 - Then you need Symfony 5, if you need it : [Symfony](https://symfony.com/doc/current/index.html). You can download from this page and this is also the documentation. Symfony have a big documentation. If you don't know Symfony, everything is explain here. Most of the time, you just need this documentation.
 
