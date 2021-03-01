@@ -75,8 +75,15 @@
                                 {% endfor %}
                                 {% for videoTriks in article_trik.videoTriks %}
                                     <div class="col-md-3">
-                                        <iframe src="{{ videoTriks.LienVidTriks }}">
-                                        </iframe> 
+                                        {# test video because youtube blocked the access #}
+                                        {% if article_trik.NomArtTriks == 'Le 720' %}
+                                            <video controls src="{{ asset('uploads/video/' ~ videoTriks.LienVidTriks) }}">
+                                                video
+                                            </video>
+                                        {% else %}
+                                            <iframe src="{{ videoTriks.LienVidTriks }}">
+                                            </iframe> 
+                                        {% endif %}
                                     </div> 
                                 {% endfor %}
                                 </div>
