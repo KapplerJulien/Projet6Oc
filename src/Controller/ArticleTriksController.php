@@ -71,6 +71,8 @@ class ArticleTriksController extends AbstractController
             $articleTrik->setUtilisateur($user);
             $articleTrik->setGroupe($groupeTriks);
 
+            $articleTrik->setSlug($articleTrik->getNomArtTriks());
+
             // var_dump($imagesTriks);
 
 
@@ -78,7 +80,6 @@ class ArticleTriksController extends AbstractController
 
             $varUser = $articleTrik->getUtilisateur();
             var_dump($varUser->getId()); */
-
             if(!empty($imagesTriksForm) && $imagesTriksForm != NULL){
                 /** @var ArticleTriks $articleTrik, @var Array $imagesTriksForm, @var FileUploader $fileUploader, @var String $route */
                 $articleTrik = $addImgVid->addImages($articleTrik, $imagesTriksForm, $fileUploader, 'new');    
@@ -115,9 +116,9 @@ class ArticleTriksController extends AbstractController
     }
 
     /**
-     * @Route("article/{id}", name="article_triks_show", methods={"GET", "POST"}, requirements={"id":"\d+"})
+     * @Route("/{slug}/show/", name="article_triks_show", methods={"GET", "POST"})
      */
-    public function show(ArticleTriks $articleTrik, Request $request): Response
+    public function show(Request $request, ArticleTriks $articleTrik): Response
     {
         $paginator_per_page = 2 + $request->query->getInt('paginator_per_page', 0);
         $repositoryComment = $this->getDoctrine()->getRepository(Commentaire::class);
@@ -168,7 +169,7 @@ class ArticleTriksController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="article_triks_edit", methods={"GET","POST"})
+     * @Route("/{slug}/edit/", name="article_triks_edit", methods={"GET","POST"})
      * 
      * @IsGranted("ROLE_USER")
      */
@@ -181,9 +182,6 @@ class ArticleTriksController extends AbstractController
                 $imagesTriks = $form->get('LienImgTriks')->getData();
                 $videosTriks = $form->get('videoTriks')->getData();
                 $groupeTriks = $form->get('Groupe')->getData();
-
-                // $test = $request->files->get('article_triks_image_update_1');
-                // var_dump($test);
 
                 $articleImages = $articleTrik->getImageTriks();
                 if($articleImages[0] == NULL && empty($imagesTriks)){
@@ -237,6 +235,7 @@ class ArticleTriksController extends AbstractController
                 
                 // $repositoryArticle = $this->getDoctrine()->getRepository(ArticleTriks::class);
                 // $result = $repositoryArticle->editArticle($articleTrik, $groupeTriks->getId());
+                $articleTrik->setSlug($articleTrik->getNomArtTriks());
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($articleTrik);
@@ -301,7 +300,7 @@ class ArticleTriksController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="article_triks_delete", methods={"DELETE"})
+     * @Route("/{slug}", name="article_triks_delete", methods={"DELETE"})
      * 
      * @IsGranted("ROLE_USER")
      */

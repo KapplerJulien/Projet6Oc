@@ -6,9 +6,15 @@ use App\Repository\ArticleTriksRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Service\Slug;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleTriksRepository::class)
+ * @UniqueEntity(
+ * fields={"NomArtTriks"},
+ * message = "Le nom de cette figure est déjà utilisé, veuillez taper un autre nom de figure !")
  */
 class ArticleTriks
 {
@@ -21,8 +27,14 @@ class ArticleTriks
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $NomArtTriks;
+
+    /**
+     * @ORM\Column(type="string", length=70)
+     */
+    private $slug;
 
     /**
      * @ORM\Column(type="string", length=5000)
@@ -86,6 +98,35 @@ class ArticleTriks
     public function setNomArtTriks(string $NomArtTriks): self
     {
         $this->NomArtTriks = $NomArtTriks;
+
+        return $this;
+    }
+
+    /**
+     * slug initialize
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function initializeSlug()
+    {
+        if(empty($this->slug)) {
+            $slugify = new Slug();
+            $this->slug = $slugify->slugify($this->title);
+        }
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+    
+    public function setSlug($slug): self
+    {
+        $slugify = new Slug();
+        $this->slug = $slugify->slugify($slug);
 
         return $this;
     }
