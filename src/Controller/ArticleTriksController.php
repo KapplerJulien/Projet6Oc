@@ -15,8 +15,7 @@ use App\Entity\ImageTriks;
 use App\Entity\VideoTriks;
 use App\Entity\Commentaire;
 use App\Entity\GroupeTriks;
-use App\Entity\Utilisateur;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Entity\Utilisateur;;
 use App\Service\FileUploader;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,11 +25,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class ArticleTriksController extends AbstractController
 {
-    private $session;
 
-    public function __construct(SessionInterface $session)
+    public function __construct()
     {
-        $this->session = $session;
     }
 
     /**
@@ -48,7 +45,8 @@ class ArticleTriksController extends AbstractController
         $form = $this->createForm(ArticleTriksType::class, $articleTrik);
         $form->handleRequest($request);
 
-        $userIdSession = $this->session->get('userId');
+        /** @var \App\Entity\Utilisateur $user */
+        $user = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
             // On récupère les images transmises
@@ -69,8 +67,6 @@ class ArticleTriksController extends AbstractController
                 
             // $articleTrik->setUtilisateur($user);
             // $user = $repositoryUser->getUserById($userIdSession);
-            /** @var \App\Entity\Utilisateur $user */
-            $user = $this->getUser();
             $articleTrik->setUtilisateur($user);
             $articleTrik->setGroupe($groupeTriks);
 
@@ -129,7 +125,7 @@ class ArticleTriksController extends AbstractController
         return $this->render('article_triks/new.html.twig', [
             'article_trik' => $articleTrik,
             'form' => $form->createView(),
-            'user' => $userIdSession,
+            'user' => $user,
         ]);
     }
 
