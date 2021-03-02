@@ -1,0 +1,28 @@
+{% block debut_userFile %}
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+{% endblock debut_userFile %}
+
+{% block errorMessage_userFile %}
+    {% if errorMessage is defined %}
+        <div class="warning-text">{{ errorMessage }}</div>
+    {% endif %}
+{% endblock errorMessage_userFile %}
+
+{% block errorMessage_loginFile %}
+    {% if error %}
+        <div class="warning-text">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+    {% if app.user %}
+        <div class="mb-3">
+            Vous êtes déjà connecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+        </div>
+    {% endif %}
+{% endblock errorMessage_loginFile %}
+        
+{% block end_userFile %}
+    </div>
+</div>
+{% endblock end_userFile %}

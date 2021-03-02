@@ -1,0 +1,36 @@
+<div class="cover-container-show d-flex w-100 h-100 p-3 mx-auto flex-column ">
+    <div class="d-flex justify-content-center mb-auto">
+        <header class="masthead cover-container-show-header">
+            <div class="inner">
+                <h3 class="masthead-brand">TriksPédia</h3>
+                <nav class="nav nav-masthead justify-content-center">
+                    <a 
+                    {% if app.request.attributes.get('_route') == 'home' %}
+                        class="nav-link active"
+                    {% else %} 
+                        class="nav-link"
+                    {% endif %}
+                    href="{{ path('home') }}">Home</a>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {# {{ dump(userId) }} #}
+                        <a 
+                        {% if app.request.attributes.get('_route') == 'article_triks_new' %}
+                            class="nav-link active"
+                        {% else %} 
+                            class="nav-link"
+                        {% endif %}
+                        href="{{ path('article_triks_new') }}">New article</a>
+                        <a class="nav-link" href="{{ path('app_logout') }}">Se déconnecter</a>
+                    {% else %}
+                        <a 
+                        {% if app.request.attributes.get('_route') == 'app_login' %}
+                            class="nav-link active"
+                        {% else %} 
+                            class="nav-link"
+                        {% endif %}
+                        href="{{ path('app_login') }}">Se connecter</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+    </div>
