@@ -10,7 +10,7 @@
         {% if user is defined and user != null %}
             <hr class="article">
             <div class="d-flex justify-content-center">
-                {{ form(form) }}
+                {{ form(form, {'action': path('new_comment', {slug: article_trik.slug})} ) }}
             </div>
         {% endif %}
         <hr class="article">

@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use App\Entity\ImageTriks;
 use App\Entity\VideoTriks;
 use App\Entity\Commentaire;
@@ -18,6 +17,7 @@ use App\Entity\GroupeTriks;
 use App\Entity\Utilisateur;;
 use App\Service\FileUploader;
 use App\Service\AddImgVid;
+use App\Service\PaginatorService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -118,53 +118,26 @@ class ArticleTriksController extends AbstractController
     /**
      * @Route("/{slug}/show/", name="article_triks_show", methods={"GET", "POST"})
      */
-    public function show(Request $request, ArticleTriks $articleTrik): Response
+    public function show(Request $request, ArticleTriks $articleTrik, PaginatorService $paginatorService): Response
     {
         $paginator_per_page = 2 + $request->query->getInt('paginator_per_page', 0);
         $repositoryComment = $this->getDoctrine()->getRepository(Commentaire::class);
-        $commentsUser = array();
-        $i = 1;
 
-        // Collect comments by article
-        // $comments = $repositoryComment->getCommentsByArticle($articleTrik);
-        $comments = $repositoryComment->getPaginComment($paginator_per_page, $articleTrik);
+        /** @var Int $paginator_per_page, @var ArticleTriks $articleTrik, @var CommentaireRepository $repositoryComment */
+        $comments = $paginatorService->paginComment($paginator_per_page, $articleTrik, $repositoryComment);
 
         /** @var \App\Entity\Utilisateur $user */
         $user = $this->getUser();
-          
-        if($user != NULL && !empty($user)){
-            $newComment = new Commentaire();
 
-            $form = $this->createForm(CommentType::class, $newComment);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                // $repositoryComment->addComment($newComment, $user[0]->getId(), $articleTrik->getId());
-                $newComment->setArticle($articleTrik);
-                $newComment->setUtilisateur($user);
-
-                $date = new \DateTime("now");
-                $newComment->setDateCommentaire($date);
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($newComment);
-                $entityManager->flush();
-
-                return $this->redirectToRoute('article_triks_show', [ 'slug' => $articleTrik->getSlug() ]);
-            }
-            return $this->render('article_triks/show.html.twig', [
-                'article_trik' => $articleTrik,
-                'comments_triks' => $comments,
-                'user' => $user,
-                'form' => $form->createView(),
-                "next" => min(count($comments), $paginator_per_page),
-            ]);
-        }
+        $form = $this->createForm(CommentType::class);
+        $form->handleRequest($request);
 
         return $this->render('article_triks/show.html.twig', [
             'article_trik' => $articleTrik,
             'comments_triks' => $comments,
             "next" => min(count($comments), $paginator_per_page),
+            'user' => $user,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -241,7 +214,6 @@ class ArticleTriksController extends AbstractController
                 $entityManager->persist($articleTrik);
                 $entityManager->flush();
                 
-
                 return $this->redirectToRoute('article_triks_show', [ 'slug' => $articleTrik->getSlug() ]);
             }
 
@@ -328,5 +300,53 @@ class ArticleTriksController extends AbstractController
         }
 
         return $this->redirectToRoute('home');
+    }
+
+    /**
+     * @Route("/{slug}/newComment", name="new_comment", methods={"POST", "GET"})
+     * 
+     * @IsGranted("ROLE_USER")
+     */
+    public function addComment(Request $request, ArticleTriks $articleTrik, PaginatorService $paginatorService): Response
+    {
+        $paginator_per_page = 2 + $request->query->getInt('paginator_per_page', 0);
+        $repositoryComment = $this->getDoctrine()->getRepository(Commentaire::class);
+
+        /** @var Int $paginator_per_page, @var ArticleTriks $articleTrik, @var CommentaireRepository $repositoryComment */
+        $comments = $paginatorService->paginComment($paginator_per_page, $articleTrik, $repositoryComment);
+
+        /** @var \App\Entity\Utilisateur $user */
+        $user = $this->getUser();
+          
+        
+        $newComment = new Commentaire();
+
+        $form = $this->createForm(CommentType::class, $newComment);
+        $form->handleRequest($request);
+            
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $repositoryComment->addComment($newComment, $user[0]->getId(), $articleTrik->getId());
+            $newComment->setArticle($articleTrik);
+            $newComment->setUtilisateur($user);
+    
+            $date = new \DateTime("now");
+            $newComment->setDateCommentaire($date);
+    
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($newComment);
+            $entityManager->flush();
+    
+            return $this->redirectToRoute('article_triks_show', [ 'slug' => $articleTrik->getSlug() ]);
+
+        }
+
+        return $this->render('article_triks/show.html.twig', [
+            'article_trik' => $articleTrik,
+            'comments_triks' => $comments,
+            'user' => $user,
+            'form' => $form->createView(),
+            "next" => min(count($comments), $paginator_per_page),
+        ]);
+        
     }
 }
