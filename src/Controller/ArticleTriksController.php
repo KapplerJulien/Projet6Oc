@@ -17,6 +17,7 @@ use App\Entity\Commentaire;
 use App\Entity\GroupeTriks;
 use App\Entity\Utilisateur;;
 use App\Service\FileUploader;
+use App\Service\AddImgVid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -35,7 +36,7 @@ class ArticleTriksController extends AbstractController
      * 
      * @IsGranted("ROLE_USER")
      */
-    public function new(Request $request, FileUploader $fileUploader): Response
+    public function new(Request $request, FileUploader $fileUploader, AddImgVid $addImgVid): Response
     {
         $articleTrik = new ArticleTriks();
         $imageTriks = new ImageTriks();
@@ -77,23 +78,10 @@ class ArticleTriksController extends AbstractController
 
             $varUser = $articleTrik->getUtilisateur();
             var_dump($varUser->getId()); */
-                
-            if(!empty($imagesTriksForm) && $imagesTriksForm != NULL){
-                // On boucle sur les images 
 
-                foreach($imagesTriksForm as $imageTriksForm){
-                    /** @var UploadedFile $imageTriksForm */
-                    $imageFileName = $fileUploader->upload($imageTriksForm);
-    
-                    // On stock l'image dans la BDD (son nom)
-                    // $repositoryuImage->addImage($fichier,$maxIdArticle[0]['max_id'] );
-    
-                    // var_dump($imageTriks);
-    
-                    $imageTriks->setLienImgTriks($imageFileName);
-                    $articleTrik->addImageTrik($imageTriks);
-                } 
-    
+            if(!empty($imagesTriksForm) && $imagesTriksForm != NULL){
+                /** @var ArticleTriks $articleTrik, @var Array $imagesTriksForm, @var FileUploader $fileUploader, @var String $route */
+                $articleTrik = $addImgVid->addImages($articleTrik, $imagesTriksForm, $fileUploader, 'new');    
             } else {
                 $imageTriks->setLienImgTriks('NoPicture.jpg');
                 $articleTrik->addImageTrik($imageTriks);
@@ -102,11 +90,8 @@ class ArticleTriksController extends AbstractController
                 
             // var_dump($videosTriks);
             foreach($videosTriks as $videoTriks){
-                // On stock l'image dans la BDD (son nom)
-                // $repositoryVideo->addVideo($videoTriks,$maxIdArticle[0]['max_id'] );
-                $videoTriksArticle = new VideoTriks();
-                $videoTriksArticle->setLienVidTriks($videoTriks);
-                $articleTrik->addVideoTrik($videoTriksArticle);
+                /** @var ArticleTriks $articleTrik, @var Array $videosTriks */
+                $articleTrik = $addImgVid->addVideos($articleTrik, $videosTriks);
             } 
 
             $date = new \DateTime("now");
@@ -187,7 +172,7 @@ class ArticleTriksController extends AbstractController
      * 
      * @IsGranted("ROLE_USER")
      */
-    public function edit(Request $request, ArticleTriks $articleTrik, FileUploader $fileUploader): Response
+    public function edit(Request $request, ArticleTriks $articleTrik, FileUploader $fileUploader, AddImgVid $addImgVid): Response
     {
             $form = $this->createForm(ArticleTriksType::class, $articleTrik);
             $form->handleRequest($request);
@@ -240,30 +225,13 @@ class ArticleTriksController extends AbstractController
                 // var_dump($groupeTriks->getId());
 
                 if(!empty($imagesTriks)){
-                    foreach($imagesTriks as $imageTriks){
-                        /** @var UploadedFile $imageTriks */
-                        $imageFileName = $fileUploader->upload($imageTriks);
-
-                        if($articleImages[0]->getLienImgTriks() == 'NoPicture.jpg'){
-                            $articleImages[0]->setLienImgTriks($imageFileName);
-                            $articleTrik->addImageTrik( $articleImages[0]);
-                        } else {
-                            $imageTriksArticle = new ImageTriks();
-                            $imageTriksArticle->setLienImgTriks($imageFileName);
-                            $articleTrik->addImageTrik($imageTriksArticle);
-                        }
-                    }
+                    /** @var ArticleTriks $articleTrik, @var Array $imagesTriksForm, @var FileUploader $fileUploader, @var String $route */
+                    $articleTrik = $addImgVid->addImages($articleTrik, $imagesTriks, $fileUploader, 'edit');
                 }
 
                 if(!empty($videosTriks)){
-                    foreach($videosTriks as $videoTriks){
-                        // On stock l'image dans la BDD (son nom)
-                        // var_dump($videoTriks);
-                        // $repositoryVideo->addVideo($videoTriks, $articleTrik->getId() );
-                        $videoTriksArticle = new VideoTriks();
-                        $videoTriksArticle->setLienVidTriks($videoTriks);
-                        $articleTrik->addVideoTrik($videoTriksArticle);
-                    }
+                    /** @var ArticleTriks $articleTrik, @var Array $videosTriks */
+                    $articleTrik = $addImgVid->addVideos($articleTrik, $videosTriks);
                 }
 
                 
