@@ -14,17 +14,17 @@
                         <svg height="0"><img src="{{ asset('/uploads/imagesArticle/' ~ imageTriks.LienImgTriks) }}" width="100%" height="250px"/></svg>
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
-                                <a href="{{ path('article_triks_show', { 'id': article.id }) }}">{{ article.nomArtTriks }}</a>
+                                <a href="{{ path('article_triks_show', { 'slug': article.slug }) }}">{{ article.nomArtTriks }}</a>
                                 <div class="btn-group d-flex">
                                     <div class="edit-btn">
-                                        <a href="{{ path('article_triks_edit', {'id': article.id}) }}">
+                                        <a href="{{ path('article_triks_edit', {'slug': article.slug}) }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                                 <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
                                             </svg>
                                         </a>
                                     </div>
                                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                                    <form method="post" action="{{ path('article_triks_delete', {'id': article.id}) }}" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet article?');">
+                                    <form method="post" action="{{ path('article_triks_delete', {'slug': article.slug}) }}" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer cet article?');">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
                                         <button class="btn btn-sm btn-outline-secondary">
