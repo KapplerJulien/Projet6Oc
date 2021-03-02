@@ -64,7 +64,7 @@ class ArticleTriks
     private $Groupe;
 
     /**
-     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="Article")
+     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="Article", cascade={"remove"})
      */
     private $commentaires;
 
