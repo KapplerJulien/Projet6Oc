@@ -29,13 +29,8 @@
                             </div>
                         </div>
                     </div>
-                </figure>
+                </figure>                    
 
-                    
-                    
-                    
-                    {# <button type="button" class="edit-image btn-new-image">Modifier image</button> #}
-                    {# <img class="img-thumbnail" src="/img/bg-masthead.jpg"> {{ article_trik.NomArtTriks }} </img> #}
                     <div class="name-new-article">
                         {{ form_row(form.NomArtTriks) }}
                     </div>
@@ -110,38 +105,9 @@
             </div>
         </div>
 
-        <div class="d-flex block-img-vid-add">
-            <div class="block-img-add">
-                <ul id="image-fields-list"
-                    data-prototype="{{ form_widget(form.LienImgTriks.vars.prototype)|e }}"
-                    data-widget-tags="{{ '<li></li>'|e }}"
-                    data-widget-counter="{{ form.LienImgTriks|length }}">
-                    {% for imageField in form.LienImgTriks %}
-                        <li>
-                            {{ form_errors(imageField) }}
-                            {{ form_widget(imageField) }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <button type="button" class="add-another-collection-widget btn-new-image" data-list-selector="#image-fields-list">Ajout image</button>
-            </div>    
-
-            <div class="block-vid-add">
-                <ul id="video-fields-list"
-                    data-prototype="{{ form_widget(form.videoTriks.vars.prototype)|e }}"
-                    data-widget-tags="{{ '<li></li>'|e }}"
-                    data-widget-counter="{{ form.videoTriks|length }}">
-                    {% for videoField in form.videoTriks %}
-                        <li>
-                            {{ form_errors(videoField) }}
-                            {{ form_widget(videoField) }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <button type="button" class="add-another-collection-widget btn-new-video" data-list-selector="#video-fields-list">Ajout vidéo</button>
-            </div>
-        </div>
-
+        
+        {% use "article_triks/_form_layout.html.twig" with addField_articleForm as parent_addField %}
+        {% block addField_edit %} {{ block('parent_addField') }} {% endblock addField_edit %}
         <div class="d-flex justify-content-center text-wrap">
             <div class="block-text">
                 {{ form_row(form.ContenuArtTriks) }}
@@ -154,37 +120,7 @@
             {{ form_row(form.NomArtTriks) }}
         </div>
 
-        <div class="d-flex block-img-vid-add">
-            <div class="block-img-add">
-                <ul id="image-fields-list"
-                    data-prototype="{{ form_widget(form.LienImgTriks.vars.prototype)|e }}"
-                    data-widget-tags="{{ '<li></li>'|e }}"
-                    data-widget-counter="{{ form.LienImgTriks|length }}">
-                    {% for imageField in form.LienImgTriks %}
-                        <li>
-                            {{ form_errors(imageField) }}
-                            {{ form_widget(imageField) }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <button type="button" class="add-another-collection-widget btn-new-image" data-list-selector="#image-fields-list">Ajout image</button>
-            </div>    
-
-            <div class="block-vid-add">
-                <ul id="video-fields-list"
-                    data-prototype="{{ form_widget(form.videoTriks.vars.prototype)|e }}"
-                    data-widget-tags="{{ '<li></li>'|e }}"
-                    data-widget-counter="{{ form.videoTriks|length }}">
-                    {% for videoField in form.videoTriks %}
-                        <li>
-                            {{ form_errors(videoField) }}
-                            {{ form_widget(videoField) }}
-                        </li>
-                    {% endfor %}
-                </ul>
-                <button type="button" class="add-another-collection-widget btn-new-video" data-list-selector="#video-fields-list">Ajout vidéo</button>
-            </div>
-        </div>
+        {% block addField_new %} {{ block('parent_addField') }} {% endblock addField_new %}
         
         {{ form_row(form.ContenuArtTriks) }}
 

@@ -1,0 +1,98 @@
+{% block img_vid_articleFile %}
+<div class="bg-light">
+    <div class="d-flex justify-content-center">
+        <div class="block-img">
+            <figure>
+                <div class="index-img">
+                    <div class="btn-group d-flex justify-content-end">
+                        <div class="edit-btn">
+                            <a href="{{ path('article_triks_edit', {'id': article_trik.id}) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <img class="img-thumbnail-article" src="{{ asset('/uploads/imagesArticle/' ~ article_trik.imageTriks[0].LienImgTriks) }}" alt="Image de tricks de snowboard">                                         
+                </div>
+                <figcaption class="figcaption-articleName">{{ article_trik.NomArtTriks }}</figcaption>
+            </figure>                     
+        </div>
+    </div>
+
+    <div class="album py-4 ">
+        <div class="container">
+            <div class="see-display">
+                <button class="btn-user" id="display-hide-see-article-show">Afficher / cacher images et vidéos</button>
+            </div>
+            <div class="row justify-content-center hide-display display-image-vid-show" id="display-images-videos-article-show">
+            {% for imageTriks in article_trik.imageTriks %}
+                {% if not loop.first %}
+                    <div class="col-md-3" >
+                        <div class="card mb-3 shadow-sm">
+                            <img class="img-article" src="{{ asset('/uploads/imagesArticle/' ~ imageTriks.LienImgTriks) }}" />
+                        </div>
+                    </div>   
+                {% endif %}
+            {% endfor %}
+            {% for videoTriks in article_trik.videoTriks %}
+                <div class="col-md-3">
+                    <iframe src="{{ videoTriks.LienVidTriks }}">
+                    </iframe>                        
+                </div> 
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock img_vid_articleFile %}
+
+{% block info_articleFile %}                          
+<div class="d-flex justify-content-center text-wrap">
+    <div class="block-text">
+        <div class="text-left">
+            {{ article_trik.ContenuArtTriks }}
+        </div>
+        <div class="d-flex justify-content-center group-article-show"> 
+            <div class="group-border">Crée le : {{ article_trik.DateCreationArtTriks ? article_trik.DateCreationArtTriks|date('Y-m-d') : '' }}</div>
+            <div class="group-border">Groupe : {{ article_trik.groupe.NomGrpTriks }}</div>
+            <div class="group-border">Dernière modification le : {{ article_trik.DateDerniereModificationArtTriks ? article_trik.DateDerniereModificationArtTriks|date('Y-m-d') : '' }}</div>
+        </div>
+{% endblock info_articleFile %} 
+
+{% block comment_articleFile %}
+    <div class="see-display">
+        <button class="btn-user" id="display-hide-see-comment-article-show">Afficher / cacher les commentaires</button>
+    </div>
+    <div class="row justify-content-center block-comment-user hide-display" id="display-comment-article-show">
+    {% for commentTriks in comments_triks %}
+        <div class="img-user-comment">
+            <img class="round-image" src="{{ asset('/uploads/imagesUser/' ~ commentTriks.Utilisateur.PhotoUtilisateur) }}"/>
+        </div>
+        <div class="block-comment">
+            <div class="pseudo-comment">
+                {{ commentTriks.Utilisateur.username }}
+                ({{ article_trik.DateCreationArtTriks ? commentTriks.DateCommentaire|date('Y-m-d') : '' }}) :
+            </div>
+            <div class="text-comment">
+                {{ commentTriks.ContenuCommentaire }}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock comment_articleFile %}
+
+{% block loadMoreComment_articleFile %}
+            {% if next < comments_triks|length %}
+            <div class="container">
+                <div class="d-flex justify-content-center">
+                    <a href="{{ path('article_triks_show', { 
+                        paginator_per_page: next,
+                        'id': article_trik.id
+                    }) }}">Load more</a>
+                </div>  
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock loadMoreComment_articleFile %}
