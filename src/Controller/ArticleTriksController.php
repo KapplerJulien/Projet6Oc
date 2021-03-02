@@ -150,7 +150,7 @@ class ArticleTriksController extends AbstractController
                 $entityManager->persist($newComment);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('article_triks_show', [ 'id' => $articleTrik->getId() ]);
+                return $this->redirectToRoute('article_triks_show', [ 'slug' => $articleTrik->getSlug() ]);
             }
             return $this->render('article_triks/show.html.twig', [
                 'article_trik' => $articleTrik,
@@ -242,7 +242,7 @@ class ArticleTriksController extends AbstractController
                 $entityManager->flush();
                 
 
-                return $this->redirectToRoute('home');
+                return $this->redirectToRoute('article_triks_show', [ 'slug' => $articleTrik->getSlug() ]);
             }
 
             return $this->render('article_triks/edit.html.twig', [
@@ -321,12 +321,6 @@ class ArticleTriksController extends AbstractController
                     $nom = $image->getLienImgTriks();
                     unlink($this->getParameter('images_directory').'/'.$nom);
                 }
-            }
-
-            $comments = $articleTrik->getCommentaires();
-            foreach($comments as $comment){
-                $entityManager->remove($comment);
-                $entityManager->flush();
             }
 
             $entityManager->remove($articleTrik);

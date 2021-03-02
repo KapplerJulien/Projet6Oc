@@ -28,13 +28,13 @@ class Commentaire
     private $DateCommentaire;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="commentaires", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=Utilisateur::class, inversedBy="commentaires")
      * @ORM\JoinColumn(nullable=false)
      */
     private $Utilisateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ArticleTriks::class, inversedBy="commentaires", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=ArticleTriks::class, inversedBy="commentaires")
      * @ORM\JoinColumn(nullable=false)
      */
     private $Article;
