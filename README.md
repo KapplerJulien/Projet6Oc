@@ -58,12 +58,12 @@ There is 10 User test
 It goes from 
 
 Pseudo : test1
-Password : test1
+Password : password1
 
 To 
 
 Pseudo : test10
-Password : test10
+Password : password10
 
 ## Library
 
