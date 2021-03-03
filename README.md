@@ -99,4 +99,4 @@ If you have some problem with the website. I will write here every library I use
 
 If you want to know the quality of the code : [my Code climate page](https://codeclimate.com/github/KapplerJulien/Projet6Oc)
 
-![Image Code climate A](https://i.imgur.com/r6evpJ1.png)
+![Image Code climate A](https://i.imgur.com/X9z0BXe.png)
